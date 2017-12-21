@@ -38,7 +38,7 @@ public class GestureLockView extends View {
     private int selectColor = 0xff895164;
 
     private OnGestureListener onGestureListener;
-    
+
     public GestureLockView(Context context) {
         super(context);
         init();
@@ -53,7 +53,7 @@ public class GestureLockView extends View {
         pointPaint = new Paint();
         pointPaint.setAntiAlias(true);
     }
-    
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
@@ -62,7 +62,7 @@ public class GestureLockView extends View {
         pointRadius = ((float) width / (gridCount * 2.0f)) * (2.0f / 3.0f);
         inRadius = pointRadius / 3;
         setMeasuredDimension(width, height);
-    
+
         if (allPoint == null) {
             allPoint = new ArrayList<>();
         } else {
@@ -76,8 +76,8 @@ public class GestureLockView extends View {
             }
         }
     }
-    
-     @Override
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         touchX = event.getX();
         touchY = event.getY();
@@ -98,7 +98,7 @@ public class GestureLockView extends View {
                     touchY = lastPoint.pointY;
                     invalidate();
                 }
-    
+
                 if (onGestureListener != null && selectPoint != null) {
                     if (selectPoint.size() > 3) {
                         int[] result = new int[selectPoint.size()];
@@ -110,14 +110,14 @@ public class GestureLockView extends View {
                         onGestureListener.onGestureNotAccept();
                     }
                 }
-                break;    
+                break;
             default:
                 break;
         }
         return true;
-    } 
-    
-   private void addPoint(int index) {
+    }
+
+    private void addPoint(int index) {
         if (selectPoint == null) {
             selectPoint = new ArrayList<>();
         }
@@ -128,15 +128,15 @@ public class GestureLockView extends View {
         }
         invalidate();
     }
-    
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawNinePoint(canvas);
         drawLineBetweenPoint(canvas);
-    }    
-    
-     private void drawNinePoint(Canvas canvas) {
+    }
+
+    private void drawNinePoint(Canvas canvas) {
         pointPaint.setStyle(Paint.Style.STROKE);
         if (allPoint != null) {
             for (Point point : allPoint) {
@@ -144,22 +144,22 @@ public class GestureLockView extends View {
                     pointPaint.setColor(selectColor);
                 } else {
                     pointPaint.setColor(defaultColor);
-                }  
+                }
                 pointPaint.setStrokeWidth(2);
                 canvas.drawCircle(point.pointX, point.pointY, pointRadius, pointPaint);
                 pointPaint.setStrokeWidth(5);
                 canvas.drawCircle(point.pointX, point.pointY, pointRadius / 3, pointPaint);
             }
         }
-    }    
-    
+    }
+
     private void drawLineBetweenPoint(Canvas canvas) {
         pointPaint.setColor(selectColor);
         pointPaint.setStrokeWidth(inRadius);
         if (selectPoint != null && selectPoint.size() > 1) {
             for (int i = 1; i < selectPoint.size(); i++) {
                 Point startPoint = selectPoint.get(i - 1);
-                Point endPoint = selectPoint.get(i);   
+                Point endPoint = selectPoint.get(i);
                 canvas.drawLine(startPoint.pointX, startPoint.pointY, endPoint.pointX, endPoint.pointY, pointPaint);
             }
         }
@@ -174,6 +174,7 @@ public class GestureLockView extends View {
             canvas.drawCircle(touchX, touchY, inRadius / 2, pointPaint);
         }
     }
+
     private static class Point {
         float pointX;
         float pointY;
@@ -185,8 +186,8 @@ public class GestureLockView extends View {
             this.index = index;
         }
     }
-    
-   private int getPointIndex(float x, float y) {
+
+    private int getPointIndex(float x, float y) {
         int px = 0, py = 0;
         float p = (float) getMeasuredWidth() / (gridCount * 2.0f);
 
@@ -196,7 +197,7 @@ public class GestureLockView extends View {
                 if (py != 0) {
                     break;
                 }
-            }    
+            }
             if (y > (i - 1) * 2 * p + p * (1.0f / 2.0f) && y < (i - 1) * 2 * p + 2 * p * (3.0f / 4.0f)) {
                 py = i;
                 if (px != 0) {
@@ -210,18 +211,20 @@ public class GestureLockView extends View {
         } else {
             return 0;
         }
-    }    
-    
+    }
+
     /**
      * 设置画出团过后的回调
+     *
      * @param onGestureListener
      */
     public void setOnGestureListener(OnGestureListener onGestureListener) {
         this.onGestureListener = onGestureListener;
-    }    
-    
-      /**
+    }
+
+    /**
      * 设置选择点的颜色和默认颜色
+     *
      * @param selectColor
      * @param defaultColor
      */
@@ -232,10 +235,11 @@ public class GestureLockView extends View {
             requestLayout();
             invalidate();
         }
-    }  
-    
+    }
+
     /**
      * 设置方格的列数，eg：3 --> 3x3  5--> 5x5
+     *
      * @param gridCount
      */
     public void setGridCount(int gridCount) {
@@ -245,10 +249,11 @@ public class GestureLockView extends View {
             invalidate();
         }
     }
-    
-   public interface OnGestureListener {
+
+    public interface OnGestureListener {
         /**
          * 图案大于3个节点的时候回调
+         *
          * @param gestureCode
          */
         public void onGestureAccept(int[] gestureCode);
